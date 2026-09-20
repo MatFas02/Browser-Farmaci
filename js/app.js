@@ -269,20 +269,15 @@ function renderDettaglio(scheda) {
       ${azienda ? `<div class="aifa-card-azienda"><b>Azienda titolare:</b> ${escapeHtml(azienda)}</div>` : ''}
 
       <div class="aifa-link-row">
-        <a class="aifa-link" href="${escapeHtml(scheda.linkFi)}" target="_blank" rel="noopener" title="Apre il foglio illustrativo sul sito AIFA">
+        <a class="aifa-link" href="${escapeHtml(urlEffettivo(scheda.linkFi))}" target="_blank" rel="noopener" title="Apre il foglio illustrativo dal sito AIFA">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
           Foglio Illustrativo
         </a>
-        <a class="aifa-link" href="${escapeHtml(scheda.linkRcp)}" target="_blank" rel="noopener" title="Apre il riassunto caratteristiche prodotto sul sito AIFA">
+        <a class="aifa-link" href="${escapeHtml(urlEffettivo(scheda.linkRcp))}" target="_blank" rel="noopener" title="Apre il riassunto caratteristiche prodotto dal sito AIFA">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><polyline points="7 12 10 12 11 9 13 15 14 12 17 12"/></svg>
           Riassunto Caratteristiche Prodotto
         </a>
-        <button class="aifa-link aifa-link-fallback" id="cercaAifaBtn" data-nome="${escapeHtml(scheda.denominazione)}" title="Se i link diretti sopra non si aprono, cerca il farmaco manualmente sul portale AIFA">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          Cerca su AIFA
-        </button>
       </div>
-      <div class="install-hint">Se il Foglio Illustrativo o il Riassunto Caratteristiche Prodotto non si aprono (capita, AIFA a volte rifiuta il link diretto), usa "Cerca su AIFA": copia il nome del farmaco e apre la ricerca ufficiale, pronto da incollare.</div>
 
       <div class="aifa-grid">
         <div>
@@ -325,16 +320,6 @@ function renderDettaglio(scheda) {
   `;
 
   document.getElementById('backBtn').addEventListener('click', tornaAllaRicerca);
-  const cercaAifaBtn = document.getElementById('cercaAifaBtn');
-  if (cercaAifaBtn) {
-    cercaAifaBtn.addEventListener('click', () => {
-      const nome = cercaAifaBtn.dataset.nome || '';
-      if (navigator.clipboard && nome) {
-        navigator.clipboard.writeText(nome).catch(() => {});
-      }
-      window.open('https://medicinali.aifa.gov.it/it/#/it/', '_blank', 'noopener');
-    });
-  }
   resultsEl.querySelectorAll('.farmaco-chip, .farmaco-chip-inline[data-farmaco]').forEach((btn) => {
     btn.addEventListener('click', () => apriDettaglio(btn.dataset.farmaco));
   });

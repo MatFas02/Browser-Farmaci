@@ -7,7 +7,7 @@
 // Elenco dei soli indirizzi AIFA che il proxy è autorizzato a contattare:
 // qualunque altro indirizzo viene rifiutato, per evitare che il proxy
 // venga usato per scaricare contenuti arbitrari da altri siti.
-const HOST_CONSENTITI = ['drive.aifa.gov.it', 'www.aifa.gov.it'];
+const HOST_CONSENTITI = ['drive.aifa.gov.it', 'www.aifa.gov.it', 'api.aifa.gov.it'];
 
 export default {
   async fetch(request) {
