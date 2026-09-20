@@ -17,15 +17,51 @@ js/papaparse.min.js    libreria per leggere i file CSV di AIFA
 data/malattie-atc.json        le 60 patologie curate con i codici ATC
 data/principi-attivi-info.json le schede dei principi attivi
 icons/                icone dell'app per la schermata Home
+cloudflare-worker.js    codice del proxy gratuito per bypassare il blocco AIFA (vedi sotto)
 
 ## Importante: la sincronizzazione dei dati AIFA
 
 Al primo utilizzo l'app non ha ancora i farmaci veri e propri: bisogna
 premere "Sincronizza database AIFA" (serve internet). Il sito di AIFA
-potrebbe rifiutare il download diretto dal browser per una politica di
-sicurezza chiamata CORS: se succede, il pulsante mostra un messaggio
-chiaro invece di un errore tecnico. In quel caso fammelo sapere: si
-risolve aggiungendo un piccolo "ponte" gratuito (proxy) tra AIFA e l'app.
+rifiuta il download diretto dal browser per una politica di sicurezza
+chiamata CORS: il pulsante mostra un messaggio chiaro invece di un
+errore tecnico, e serve un piccolo "ponte" gratuito (proxy) tra AIFA e
+l'app. La guida qui sotto spiega come attivarlo: sono circa 10 minuti,
+tutto dal browser, senza installare nulla sul computer.
+
+### Attivare il proxy gratuito (Cloudflare Worker)
+
+1. Vai su workers.cloudflare.com e crea un account gratuito (basta
+   un'email, non serve carta di credito).
+2. Nella dashboard di Cloudflare, cerca la sezione "Workers e Pages" nel
+   menu a sinistra, poi premi "Crea" (o "Create application" / "Create
+   Worker" a seconda della lingua mostrata).
+3. Scegli di creare un Worker da zero ("Create Worker" / "Hello World").
+   Dagli un nome, per esempio "indice-terapeutico-proxy", e conferma.
+4. Ti si aprirà un editor di codice online ("Quick edit" o simile).
+   Cancella tutto il codice di esempio che trovi già scritto e incolla al
+   suo posto tutto il contenuto del file "cloudflare-worker.js" incluso
+   in questo pacchetto (aprilo con un editor di testo, seleziona tutto,
+   copia).
+5. Premi "Save and deploy" (o "Deploy").
+6. Cloudflare ti mostrerà un indirizzo del tipo:
+   https://indice-terapeutico-proxy.tuonomeutente.workers.dev
+   Copialo per intero.
+7. Apri il file "js/sync.js" di questo pacchetto con un editor di testo
+   (anche il Blocco Note va bene) e trova la riga:
+   const PROXY_URL = '';
+   Incolla l'indirizzo copiato tra i due apici, così:
+   const PROXY_URL = 'https://indice-terapeutico-proxy.tuonomeutente.workers.dev';
+8. Salva il file, poi ricaricalo su GitHub (sul file "js/sync.js" del tuo
+   repository, usa il pulsante a forma di matita "Edit" per sostituirne
+   il contenuto, oppure ricaricalo da "Add file" -> "Upload files": in
+   quel caso GitHub chiederà conferma di sovrascriverlo).
+9. Aspetta un minuto, poi apri l'app e premi di nuovo "Sincronizza
+   database AIFA": ora la richiesta passa dal tuo Worker invece che
+   direttamente da AIFA.
+
+Se qualcosa non funziona in questi passaggi, mandami uno screenshot e ti
+aiuto a proseguire.
 
 ## Come pubblicarla gratis su GitHub Pages
 

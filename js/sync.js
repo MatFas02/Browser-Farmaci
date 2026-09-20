@@ -7,7 +7,7 @@
 // browser; se AIFA lo blocca, incolla qui l'indirizzo che Cloudflare ti
 // ha assegnato dopo aver pubblicato il Worker (vedi README.md), es.
 // 'https://indice-terapeutico-proxy.tuonomeutente.workers.dev'
-const PROXY_URL = 'https://indice-terapeutico-proxy.fassolimathias.workers.dev/';
+const PROXY_URL = '';
 
 // Se il proxy è configurato, ogni richiesta ad AIFA passa da lì invece
 // che direttamente al sito AIFA: il Worker inoltra la richiesta al posto

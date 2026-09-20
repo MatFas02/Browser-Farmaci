@@ -142,7 +142,8 @@ function dettaglioFarmaco(denominazione, cache, malattieDb, infoPrincipiAttivi) 
       soloDosaggio = !!composizione;
     }
     return {
-      aic: f.aic, denominazione: f.denominazione, azienda: f.azienda, stato: f.stato, atc: f.atc,
+      aic: f.aic, denominazione: f.denominazione, nomeEffettivo: (eq && eq.farmaco) || f.denominazione,
+      azienda: f.azienda, stato: f.stato, atc: f.atc,
       forma: f.forma || null, fornitura: f.fornitura || null,
       composizione: composizione || null, soloDosaggio, equivalente: !!eq
     };

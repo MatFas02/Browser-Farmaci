@@ -235,7 +235,7 @@ function renderDettaglio(scheda) {
           <tbody>
             ${scheda.varianti.map((v) => `
               <tr>
-                <td>${escapeHtml(v.denominazione) || '—'}</td>
+                <td>${escapeHtml(v.nomeEffettivo || v.denominazione) || '—'}</td>
                 <td>${v.composizione
                     ? escapeHtml(v.composizione) + (v.soloDosaggio ? ' <span class="badge-dosaggio">solo dosaggio</span>' : '')
                     : '<span class="composizione-mancante">non disponibile</span>'}</td>
@@ -277,7 +277,12 @@ function renderDettaglio(scheda) {
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><polyline points="7 12 10 12 11 9 13 15 14 12 17 12"/></svg>
           Riassunto Caratteristiche Prodotto
         </a>
+        <button class="aifa-link aifa-link-fallback" id="cercaAifaBtn" data-nome="${escapeHtml(scheda.denominazione)}" title="Se i link diretti sopra non si aprono, cerca il farmaco manualmente sul portale AIFA">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Cerca su AIFA
+        </button>
       </div>
+      <div class="install-hint">Se il Foglio Illustrativo o il Riassunto Caratteristiche Prodotto non si aprono (capita, AIFA a volte rifiuta il link diretto), usa "Cerca su AIFA": copia il nome del farmaco e apre la ricerca ufficiale, pronto da incollare.</div>
 
       <div class="aifa-grid">
         <div>
@@ -320,6 +325,16 @@ function renderDettaglio(scheda) {
   `;
 
   document.getElementById('backBtn').addEventListener('click', tornaAllaRicerca);
+  const cercaAifaBtn = document.getElementById('cercaAifaBtn');
+  if (cercaAifaBtn) {
+    cercaAifaBtn.addEventListener('click', () => {
+      const nome = cercaAifaBtn.dataset.nome || '';
+      if (navigator.clipboard && nome) {
+        navigator.clipboard.writeText(nome).catch(() => {});
+      }
+      window.open('https://medicinali.aifa.gov.it/it/#/it/', '_blank', 'noopener');
+    });
+  }
   resultsEl.querySelectorAll('.farmaco-chip, .farmaco-chip-inline[data-farmaco]').forEach((btn) => {
     btn.addEventListener('click', () => apriDettaglio(btn.dataset.farmaco));
   });
