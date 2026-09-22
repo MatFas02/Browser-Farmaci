@@ -2,7 +2,7 @@
 // dopo il primo caricamento. I dati AIFA veri sono in IndexedDB (gestiti
 // da js/sync.js), non qui: qui mettiamo in cache solo i file dell'app.
 
-const CACHE_NOME = 'indice-terapeutico-v2';
+const CACHE_NOME = 'indice-terapeutico-v3';
 const FILE_DA_CACHARE = [
   './',
   './index.html',
