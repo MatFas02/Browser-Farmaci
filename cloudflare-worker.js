@@ -63,6 +63,13 @@ export default {
 
     const nuoveIntestazioni = new Headers(rispostaAifa.headers);
     nuoveIntestazioni.set('Access-Control-Allow-Origin', '*');
+    // AIFA a volte manda "Content-Disposition: attachment", che fa comparire
+    // la richiesta di download di Safari invece di mostrare il PDF
+    // direttamente nella pagina. Forziamo "inline" così viene sempre
+    // visualizzato, mai proposto come download.
+    if (nuoveIntestazioni.has('Content-Disposition')) {
+      nuoveIntestazioni.set('Content-Disposition', 'inline');
+    }
 
     return new Response(rispostaAifa.body, {
       status: rispostaAifa.status,
