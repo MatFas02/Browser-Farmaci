@@ -271,11 +271,11 @@ function renderDettaglio(scheda) {
       ${azienda ? `<div class="aifa-card-azienda"><b>Azienda titolare:</b> ${escapeHtml(azienda)}</div>` : ''}
 
       <div class="aifa-link-row">
-        <a class="aifa-link" href="${escapeHtml(urlEffettivo(scheda.linkFi))}" target="_blank" rel="noopener" title="Apre il foglio illustrativo dal sito AIFA">
+        <a class="aifa-link" href="${escapeHtml(scheda.linkFi)}" target="_blank" rel="noopener" title="Apre il foglio illustrativo dal sito AIFA">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
           Foglio Illustrativo
         </a>
-        <a class="aifa-link" href="${escapeHtml(urlEffettivo(scheda.linkRcp))}" target="_blank" rel="noopener" title="Apre il riassunto caratteristiche prodotto dal sito AIFA">
+        <a class="aifa-link" href="${escapeHtml(scheda.linkRcp)}" target="_blank" rel="noopener" title="Apre il riassunto caratteristiche prodotto dal sito AIFA">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><polyline points="7 12 10 12 11 9 13 15 14 12 17 12"/></svg>
           Riassunto Caratteristiche Prodotto
         </a>
