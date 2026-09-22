@@ -42,9 +42,24 @@ export default {
       return new Response('Host non consentito da questo proxy.', { status: 403 });
     }
 
-    const rispostaAifa = await fetch(destUrl.toString(), {
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; IndiceTerapeutico/1.0)' }
-    });
+    let rispostaAifa;
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      rispostaAifa = await fetch(destUrl.toString(), {
+        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; IndiceTerapeutico/1.0)' },
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
+    } catch (e) {
+      const messaggio = e.name === 'AbortError'
+        ? 'Il sito AIFA non ha risposto entro 15 secondi.'
+        : `Errore nel contattare AIFA: ${e.message}`;
+      return new Response(messaggio, {
+        status: 504,
+        headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'text/plain; charset=utf-8' }
+      });
+    }
 
     const nuoveIntestazioni = new Headers(rispostaAifa.headers);
     nuoveIntestazioni.set('Access-Control-Allow-Origin', '*');

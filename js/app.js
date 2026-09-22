@@ -271,11 +271,11 @@ function renderDettaglio(scheda) {
       ${azienda ? `<div class="aifa-card-azienda"><b>Azienda titolare:</b> ${escapeHtml(azienda)}</div>` : ''}
 
       <div class="aifa-link-row">
-        <a class="aifa-link aifa-pdf-link" href="${escapeHtml(scheda.linkFi)}" data-pdf-url="${escapeHtml(urlEffettivo(scheda.linkFi))}" title="Apre il foglio illustrativo dal sito AIFA">
+        <a class="aifa-link" href="${escapeHtml(urlEffettivo(scheda.linkFi))}" target="_blank" rel="noopener" title="Apre il foglio illustrativo dal sito AIFA">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
           Foglio Illustrativo
         </a>
-        <a class="aifa-link aifa-pdf-link" href="${escapeHtml(scheda.linkRcp)}" data-pdf-url="${escapeHtml(urlEffettivo(scheda.linkRcp))}" title="Apre il riassunto caratteristiche prodotto dal sito AIFA">
+        <a class="aifa-link" href="${escapeHtml(urlEffettivo(scheda.linkRcp))}" target="_blank" rel="noopener" title="Apre il riassunto caratteristiche prodotto dal sito AIFA">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><polyline points="7 12 10 12 11 9 13 15 14 12 17 12"/></svg>
           Riassunto Caratteristiche Prodotto
         </a>
@@ -323,48 +323,6 @@ function renderDettaglio(scheda) {
   `;
 
   document.getElementById('backBtn').addEventListener('click', tornaAllaRicerca);
-  const pdfMsg = document.getElementById('pdfMsg');
-  resultsEl.querySelectorAll('.aifa-pdf-link').forEach((link) => {
-    link.addEventListener('click', (event) => {
-      event.preventDefault();
-      const urlOriginale = link.getAttribute('href');
-      const urlProxy = link.dataset.pdfUrl;
-      if (!urlOriginale) {
-        if (pdfMsg) pdfMsg.textContent = 'Documento non disponibile per questo farmaco nel database sincronizzato.';
-        return;
-      }
-      if (pdfMsg) pdfMsg.textContent = 'Apertura del documento in corso…';
-
-      // Apriamo subito una scheda vuota, nello stesso click dell'utente:
-      // è l'unico modo per evitare che Safari blocchi l'apertura come
-      // popup (bloccherebbe una finestra aperta più tardi, dopo un
-      // download asincrono, anche se avviata dallo stesso tocco).
-      const finestra = window.open('', '_blank');
-
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 20000);
-
-      fetch(urlProxy, { signal: controller.signal })
-        .then((res) => {
-          clearTimeout(timeoutId);
-          if (!res.ok) throw new Error(`Il server ha risposto con errore ${res.status}`);
-          return res.blob();
-        })
-        .then((blob) => {
-          const blobUrl = URL.createObjectURL(blob);
-          if (finestra) finestra.location.href = blobUrl;
-          if (pdfMsg) pdfMsg.textContent = '';
-        })
-        .catch((err) => {
-          clearTimeout(timeoutId);
-          if (finestra) finestra.close();
-          const motivo = err.name === 'AbortError'
-            ? 'il sito AIFA non ha risposto in tempo'
-            : err.message;
-          if (pdfMsg) pdfMsg.textContent = `Non è stato possibile aprire il documento (${motivo}). Riprova tra qualche minuto.`;
-        });
-    });
-  });
   resultsEl.querySelectorAll('.farmaco-chip, .farmaco-chip-inline[data-farmaco]').forEach((btn) => {
     btn.addEventListener('click', () => apriDettaglio(btn.dataset.farmaco));
   });
